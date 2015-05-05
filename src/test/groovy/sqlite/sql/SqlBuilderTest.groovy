@@ -74,6 +74,7 @@ class SqlBuilderTest extends Specification {
         [name: 'thiago', '$not.in.age': '22'] || "WHERE name = ? AND age NOT IN (?)"
         [name: 'thiago', '$in.age': '22,44']  || "WHERE name = ? AND age IN (?, ?)"
         ['$between.age': '22,44']             || "WHERE age BETWEEN ? AND ?"
+        [:]                                   || ""
     }
 
     def "MountWhereData"() {

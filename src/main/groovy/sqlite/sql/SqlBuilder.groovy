@@ -1,12 +1,10 @@
 package sqlite.sql
 
 import groovy.transform.TypeChecked
-import groovy.transform.builder.Builder
 
 /**
  * Created by thiago on 30/04/15.
  */
-@Builder
 @TypeChecked
 class SqlBuilder {
     private static final String BETWEEN = '^\\$between\\.'
@@ -84,7 +82,7 @@ class SqlBuilder {
             [clause: (aux.isEmpty() ? acc['clause'] : (acc['clause'] + [aux])),
              data  : (aux.isEmpty() ? acc['data'] : (acc['data'] + conditionData(entry.key, entry.value)))]
         } as Map<String, List<String>>)
-        [clause: "${condition} " + result['clause'].join(" ${defaultOperator} "), data: result['data'].flatten()]
+        [clause: ("${!result['clause'].isEmpty() ? condition : ''} " + result['clause'].join(" ${defaultOperator} ")).trim(), data: result['data'].flatten()]
     }
 
     Map<String, ?> mountWhere(Map<String, String> params) { mountCondition("WHERE", params) }
