@@ -43,7 +43,7 @@ bintray {
     dryRun = false //Whether to run this as dry-run, without deploying
     publish = true //If version should be auto published after an upload
     pkg {
-        repo = 'groovy-sqlite'
+        repo = 'maven'
         name = project.name
         desc = 'Library for Groovy that mount queries with a simple configuration.'
         websiteUrl = 'https://github.com/pintowar/groovy-sqlite'
@@ -54,3 +54,4 @@ bintray {
         publicDownloadNumbers = true
     }
 }
+
