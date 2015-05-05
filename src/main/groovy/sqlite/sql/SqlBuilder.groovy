@@ -19,8 +19,6 @@ class SqlBuilder {
     private static final String NOT_EQ = '^\\$not\\.eq\\.'
 
     private static final String ORDER = '^\\$order\\.'
-    private static final String ORDER_ASC = '^\\$order\\.asc\\.'
-    private static final String ORDER_DESC = '^\\$order\\.desc\\.'
 
     String valueSep = ','
     String defaultOperator = "AND"
@@ -50,10 +48,9 @@ class SqlBuilder {
     }
 
     String orderClause(String keyParam, String valueParam) {
+        String order = valueParam.trim().isEmpty() ? '' : valueParam.toLowerCase() == 'desc' ? "DESC" : "ASC"
         switch (keyParam) {
-            case ~(ORDER + '.+'): return "${keyParam.replaceAll(ORDER, '')} ${valueParam}"
-            case ~(ORDER_ASC + '.+'): return "${keyParam.replaceAll(ORDER_ASC, '')} ${valueParam} ASC"
-            case ~(ORDER_DESC + '.+'): return "${keyParam.replaceAll(ORDER_DESC, '')} ${valueParam} DESC"
+            case ~(ORDER + '.+'): return "${keyParam.replaceAll(ORDER, '')} ${order}".trim()
 
             default: return ""
         }
@@ -106,7 +103,7 @@ class SqlBuilder {
     String mountOrder(Map<String, String> params) {
         List<String> result = (params.inject([]) { acc, entry ->
             String aux = orderClause(entry.key, entry.value)
-            aux ? acc : (acc + [aux])
+            aux ? (acc + [aux]) : acc
         }.findAll() as List<String>)
         result.isEmpty() ? "" : "ORDER BY ${result.join(', ')}"
     }

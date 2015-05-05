@@ -6,9 +6,11 @@ import spock.lang.Specification
  * Created by thiago on 30/04/15.
  */
 class SqlBuilderTest extends Specification {
-    def sqlBuilder = new SqlBuilder()
 
     def "WhereClause"() {
+        given:
+        def sqlBuilder = new SqlBuilder()
+
         expect:
         clause == sqlBuilder.conditionClause(keyParam, valParam)
 
@@ -25,6 +27,9 @@ class SqlBuilderTest extends Specification {
     }
 
     def "WhereData"() {
+        given:
+        def sqlBuilder = new SqlBuilder()
+
         expect:
         data == sqlBuilder.conditionData(keyParam, valParam)
 
@@ -42,6 +47,9 @@ class SqlBuilderTest extends Specification {
     }
 
     def "MountTable"() {
+        given:
+        def sqlBuilder = new SqlBuilder()
+
         expect:
         clause == sqlBuilder.mountTable(param)
 
@@ -52,6 +60,9 @@ class SqlBuilderTest extends Specification {
     }
 
     def "MountSelect"() {
+        given:
+        def sqlBuilder = new SqlBuilder()
+
         expect:
         clause == sqlBuilder.mountSelect(param)
 
@@ -62,6 +73,9 @@ class SqlBuilderTest extends Specification {
     }
 
     def "MountWhereClause"() {
+        given:
+        def sqlBuilder = new SqlBuilder()
+
         expect:
         clause == sqlBuilder.mountWhere(param).clause
 
@@ -77,7 +91,26 @@ class SqlBuilderTest extends Specification {
         [:]                                   || ""
     }
 
+    def "MountOrderClause"() {
+        given:
+        def sqlBuilder = new SqlBuilder()
+
+        expect:
+        clause == sqlBuilder.mountOrder(param)
+
+        where:
+        param                                          || clause
+        [:]                                            || ""
+        ['$order.age': 'asc']                          || "ORDER BY age ASC"
+        ['$order.birth': 'desc']                       || "ORDER BY birth DESC"
+        ['$order.name': 'asc', '$order.birth': 'desc'] || "ORDER BY name ASC, birth DESC"
+        ['$order.name': '', '$order.birth': 'desc']    || "ORDER BY name, birth DESC"
+    }
+
     def "MountWhereData"() {
+        given:
+        def sqlBuilder = new SqlBuilder()
+
         expect:
         data == sqlBuilder.mountWhere(param).data
 
@@ -94,6 +127,9 @@ class SqlBuilderTest extends Specification {
     }
 
     def "Query"() {
+        given:
+        def sqlBuilder = new SqlBuilder()
+
         expect:
         query == new SqlBuilder(table: table, columns: columns, params: params).queryAndData().query
 

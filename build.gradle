@@ -12,7 +12,7 @@ apply plugin: 'java'
 apply plugin: 'groovy'
 
 sourceCompatibility = 1.7
-version = '0.1'
+version = '0.1.2'
 group = 'com.github.groovy-sqlite'
 
 repositories {
@@ -36,8 +36,8 @@ task('javadocJar', type: Jar, dependsOn: javadoc) {
 }
 
 bintray {
-    user = ''
-    key = ''
+    user = bintray_user
+    key = bintray_api_key
     configurations = ['published', 'archives'] //When uploading configuration files
 
     dryRun = false //Whether to run this as dry-run, without deploying
