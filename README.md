@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/pintowar/groovy-sqlite.svg?branch=master)](https://travis-ci.org/pintowar/groovy-sqlite)
+[![Coverage Status](https://coveralls.io/repos/pintowar/groovy-sqlite/badge.svg?branch=master)](https://coveralls.io/r/pintowar/groovy-sqlite?branch=master)
 
 # groovy-sqlite
 
