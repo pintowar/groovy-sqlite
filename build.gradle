@@ -4,9 +4,12 @@ buildscript {
     }
     dependencies {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.6'
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.0.1'
     }
 }
 
+apply plugin: 'jacoco'
+apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'java'
 apply plugin: 'groovy'
@@ -52,5 +55,12 @@ bintray {
         licenses = ['Apache 2.0']
         labels = ['java', 'groovy', 'query']
         publicDownloadNumbers = true
+    }
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true // coveralls plugin depends on xml format report
+        html.enabled = true
     }
 }

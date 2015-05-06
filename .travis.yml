@@ -5,3 +5,4 @@ jdk:
   - oraclejdk7
   - openjdk7
 script: "./gradlew -q check"
+after_success: "./gradlew jacocoTestReport coveralls"
