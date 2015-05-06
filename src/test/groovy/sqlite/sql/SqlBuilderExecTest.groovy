@@ -19,8 +19,11 @@ class SqlBuilderExecTest extends Specification {
     def "WhereClause"() {
         given:
         Map result
+        def builder = SqlBuilder.criteria()
+        //SqlBuilder builder = new SqlBuilder(table: table, columns: columns, params: params)
+        SqlBuilder generator = builder.table(table).columns(columns).params(params).create()
         when:
-        result = new SqlBuilder(table: table, columns: columns, params: params).queryAndData()
+        result = generator.queryAndData()
         then:
         rows == sql.rows(result.query, result.data).size
 

@@ -1,10 +1,15 @@
 package sqlite.sql
 
+import groovy.transform.PackageScope
+import static groovy.transform.PackageScopeTarget.*
 import groovy.transform.TypeChecked
+import groovy.transform.builder.Builder
 
 /**
  * Created by thiago on 30/04/15.
  */
+@Builder(builderClassName = "SqlBuilderCriteria", builderMethodName = "criteria", buildMethodName = "create")
+@PackageScope(FIELDS)
 @TypeChecked
 class SqlBuilder {
     private static final String BETWEEN = '^\\$between\\.'
@@ -20,16 +25,16 @@ class SqlBuilder {
 
     private static final String ORDER = '^\\$order\\.'
 
-    String valueSep = ','
-    String defaultOperator = "AND"
+    String valueSep
+    String defaultOperator
     String table
-    List<String> columns = []
-    List<String> groupColumns = []
-    Map<String, String> params = [:]
-    Map<String, String> havingParams = [:]
+    List<String> columns
+    List<String> groupColumns
+    Map<String, String> params
+    Map<String, String> havingParams
 
     String conditionClause(String keyParam, String valueParam) {
-        int totalParams = valueParam.split(valueSep).size()
+        int totalParams = valueParam.split(getValueSep()).size()
         switch (keyParam) {
             case ~(BETWEEN + '.+'): return "${keyParam.replaceAll(BETWEEN, '')} BETWEEN ? AND ?"
             case ~(NOT_BETWEEN + '.+'): return "${keyParam.replaceAll(NOT_BETWEEN, '')} NOT BETWEEN ? AND ?"
@@ -57,7 +62,7 @@ class SqlBuilder {
     }
 
     List<String> conditionData(String keyParam, String valueParam) {
-        List<String> args = valueParam.split(valueSep) as List<String>
+        List<String> args = valueParam.split(getValueSep()) as List<String>
         int totalParams = args.size()
         String btwMsg = "Between clause must have two arguments"
         switch (keyParam) {
@@ -79,7 +84,7 @@ class SqlBuilder {
             [clause: (aux.isEmpty() ? acc['clause'] : (acc['clause'] + [aux])),
              data  : (aux.isEmpty() ? acc['data'] : (acc['data'] + conditionData(entry.key, entry.value)))]
         } as Map<String, List<String>>)
-        [clause: ("${!result['clause'].isEmpty() ? condition : ''} " + result['clause'].join(" ${defaultOperator} ")).trim(), data: result['data'].flatten()]
+        [clause: ("${!result['clause'].isEmpty() ? condition : ''} " + result['clause'].join(" ${getDefaultOperator()} ")).trim(), data: result['data'].flatten()]
     }
 
     Map<String, ?> mountWhere(Map<String, String> params) { mountCondition("WHERE", params) }
@@ -109,11 +114,35 @@ class SqlBuilder {
     }
 
     Map<String, ?> queryAndData() {
-        Map where = mountWhere(params)
-        Map having = mountHaving(havingParams)
-        String query = [mountSelect(this.columns), mountTable(this.table),
-                        where['clause'], mountGroup(groupColumns),
-                        having['clause'], mountOrder(params)].findAll().join(' ').toString()
+        Map where = mountWhere(getParams())
+        Map having = mountHaving(getHavingParams())
+        String query = [mountSelect(getColumns()), mountTable(table),
+                        where['clause'], mountGroup(getGroupColumns()),
+                        having['clause'], mountOrder(getParams())].findAll().join(' ').toString()
         [query: query, data: ((where['data'] as List<String>) + (having['data'] as List<String>))]
+    }
+
+    public String getValueSep() {
+        valueSep ?: ","
+    }
+
+    public String getDefaultOperator() {
+        defaultOperator ?: "AND"
+    }
+
+    public List<String> getColumns() {
+        columns ?: []
+    }
+
+    public List<String> getGroupColumns() {
+        groupColumns ?: []
+    }
+
+    public Map<String, String> getParams() {
+        params ?: [:]
+    }
+
+    public Map<String, String> getHavingParams() {
+        havingParams ?: [:]
     }
 }

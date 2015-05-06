@@ -8,6 +8,7 @@ buildscript {
     }
 }
 
+apply plugin: 'maven'
 apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'com.jfrog.bintray'

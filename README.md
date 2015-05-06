@@ -11,7 +11,7 @@ This library assumes you know exactly what
 
 ## 0.1
 
-* JDK 1.5 or higher
+* JDK 1.7 or higher
 * Requires [Groovy 2.4.0] (http://www.groovy-lang.org/) or higher
 
 ## SQL
@@ -21,7 +21,7 @@ This library assumes you know exactly what
 ``` groovy
 @GrabResolver(name='bintray-pintowar-maven', root='http://dl.bintray.com/pintowar/maven')
 @Grab(group="com.h2database", module='h2', version='1.4.182')
-@Grab(group='com.github.groovy-sqlite', module='groovy-sqlite', version='0.1.2')
+@Grab(group='com.github.groovy-sqlite', module='groovy-sqlite', version='0.1.3')
 @GrabConfig(systemClassLoader=true)
 import sqlite.sql.*
 import groovy.sql.Sql
