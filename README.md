@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/pintowar/groovy-sqlite.svg?branch=master)](https://travis-ci.org/pintowar/groovy-sqlite)
+
 # groovy-sqlite
 
 Library for Groovy that mount queries with a simple configuration.
