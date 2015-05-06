@@ -54,7 +54,3 @@ bintray {
         publicDownloadNumbers = true
     }
 }
-
-task bintrayPublish << {
-    dependsOn check
-}
