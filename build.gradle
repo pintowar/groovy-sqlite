@@ -8,40 +8,95 @@ buildscript {
     }
 }
 
-apply plugin: 'maven'
+apply plugin: 'maven-publish'
 apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'java'
 apply plugin: 'groovy'
 
-sourceCompatibility = 1.7
-version = '0.1.3'
+version = '0.1.4'
 group = 'com.github.groovy-sqlite'
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    compile "org.codehaus.groovy:groovy-all:2.4.3"
+    compile "org.codehaus.groovy:groovy:2.4.3"
     testCompile "org.spockframework:spock-core:1.0-groovy-2.4"
     testRuntime "com.h2database:h2:1.4.182"
 }
 
-task('sourceJar', type: Jar) {
+task javadocJar( type: Jar, dependsOn: javadoc ) {
+    classifier 'javadoc'
+    from javadoc.destinationDir
+}
+
+task sourcesJar( type: Jar ) {
     from sourceSets.main.allSource
     classifier = 'sources'
 }
 
-task('javadocJar', type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
+artifacts {
+    archives jar
+    archives sourcesJar
+    archives javadocJar
 }
 
+def pomConfig = {
+    scm {
+        url 'https://github.com/pintowar/groovy-sqlite'
+        connection 'scm:https://github.com/pintowar/groovy-sqlite.git'
+        developerConnection 'scm:git://github.com/pintowar/groovy-sqlite.git'
+    }
+    licenses {
+        license {
+            name 'The Apache Software License, Version 2.0'
+            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+            distribution 'repo'
+        }
+    }
+    developers {
+        developer {
+            id 'pintowar'
+            name 'Thiago Oliveira'
+            email 'pintowar@gmail.com'
+        }
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+
+            artifact sourcesJar {
+                classifier "sources"
+            }
+
+            artifact javadocJar {
+                classifier "javadoc"
+            }
+
+            pom.withXml {
+                def root = asNode()
+                root.appendNode( 'name', 'groovy-sqlite' )
+                root.appendNode( 'description', 'Library for Groovy that mount queries with a simple configuration.' )
+                root.appendNode( 'url', 'http://github.com/pintowar/groovy-sqlite/' )
+                root.appendNode( 'inceptionYear', '2015' )
+                root.children().last() + pomConfig
+            }
+        }
+    }
+}
+
+
 bintray {
-    user = bintray_user
-    key = bintray_api_key
+    user = hasProperty('bintray_user') ? bintray_user : ''
+    key = hasProperty('bintray_api_key') ? bintray_api_key : ''
     configurations = ['published', 'archives'] //When uploading configuration files
 
     dryRun = false //Whether to run this as dry-run, without deploying
@@ -58,6 +113,8 @@ bintray {
         publicDownloadNumbers = true
     }
 }
+
+bintrayUpload.dependsOn(check)
 
 jacocoTestReport {
     reports {
