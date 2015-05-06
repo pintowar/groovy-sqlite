@@ -9,7 +9,7 @@ import groovy.transform.builder.Builder
  * Created by thiago on 30/04/15.
  */
 @Builder(builderClassName = "SqlBuilderCriteria", builderMethodName = "criteria", buildMethodName = "create")
-@PackageScope(FIELDS)
+@PackageScope([FIELDS, METHODS])
 @TypeChecked
 class SqlBuilder {
     private static final String BETWEEN = '^\\$between\\.'
@@ -113,7 +113,7 @@ class SqlBuilder {
         result.isEmpty() ? "" : "ORDER BY ${result.join(', ')}"
     }
 
-    Map<String, ?> queryAndData() {
+    public Map<String, ?> queryAndData() {
         Map where = mountWhere(getParams())
         Map having = mountHaving(getHavingParams())
         String query = [mountSelect(getColumns()), mountTable(table),
