@@ -9,9 +9,9 @@ This library assumes you know exactly what
 
 # Versions
 
-## 0.1
+## 0.1.x
 
-* JDK 1.7 or higher
+* JDK 1.6 or higher
 * Requires [Groovy 2.4.0] (http://www.groovy-lang.org/) or higher
 
 ## SQL

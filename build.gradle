@@ -3,17 +3,16 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.6'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.1'
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.0.1'
     }
 }
 
+apply plugin: 'groovy'
 apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
 apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
-apply plugin: 'com.jfrog.bintray'
-apply plugin: 'java'
-apply plugin: 'groovy'
 
 version = '0.1.4'
 group = 'com.github.groovy-sqlite'
@@ -72,14 +71,8 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
-
-            artifact sourcesJar {
-                classifier "sources"
-            }
-
-            artifact javadocJar {
-                classifier "javadoc"
-            }
+            artifact sourcesJar
+            artifact javadocJar
 
             pom.withXml {
                 def root = asNode()
@@ -95,9 +88,9 @@ publishing {
 
 
 bintray {
-    user = hasProperty('bintray_user') ? bintray_user : ''
-    key = hasProperty('bintray_api_key') ? bintray_api_key : ''
-    configurations = ['published', 'archives'] //When uploading configuration files
+    user = !hasProperty('bintray_user') ? bintray_user : ''
+    key = !hasProperty('bintray_api_key') ? bintray_api_key : ''
+    publications = ['mavenJava'] // When uploading Maven-based publication files
 
     dryRun = false //Whether to run this as dry-run, without deploying
     publish = true //If version should be auto published after an upload
