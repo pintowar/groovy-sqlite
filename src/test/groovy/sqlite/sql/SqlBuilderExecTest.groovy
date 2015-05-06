@@ -28,8 +28,8 @@ class SqlBuilderExecTest extends Specification {
         columns      | table                                         | params                                   || rows
         []           | 'my_tab'                                      | [name: 'foo']                            || 1
         ['name']     | 'my_tab'                                      | ['$gt.age': '20', '$order': 'name']      || 2
-        ['name']     | 'my_tab'                                      | ['$gt.age': '20', '$order.asc': 'birth'] || 2
-        ['name']     | 'my_tab'                                      | ['$gt.age': '20', '$order.desc': 'age']  || 2
+        ['name']     | 'my_tab'                                      | ['$gt.age': '20', '$order.birth': 'asc'] || 2
+        ['name']     | 'my_tab'                                      | ['$gt.age': '20', '$order.age': 'desc']  || 2
         []           | 'my_tab'                                      | ['$in.age': '29,44']                     || 2
         ['1 as zaz'] | 'my_tab a inner join my_tab b on a.id = b.id' | ['$lte.a.birth': '2015-05-01']           || 3
     }

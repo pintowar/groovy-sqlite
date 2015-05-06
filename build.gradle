@@ -55,3 +55,6 @@ bintray {
     }
 }
 
+task bintrayPublish << {
+    dependsOn check
+}
