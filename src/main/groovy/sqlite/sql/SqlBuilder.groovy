@@ -11,8 +11,8 @@ import static groovy.transform.PackageScopeTarget.METHODS
  * Created by thiago on 30/04/15.
  */
 @TypeChecked
-@PackageScope([FIELDS, METHODS])
 @Builder(builderClassName = "SqlBuilderCriteria", builderMethodName = "criteria", buildMethodName = "create")
+@PackageScope([FIELDS, METHODS])
 class SqlBuilder {
     private static final String BETWEEN = '^\\$between\\.'
     private static final String NOT_BETWEEN = '^\\$not\\.between\\.'

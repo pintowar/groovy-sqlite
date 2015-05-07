@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.1'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.2'
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.0.1'
     }
 }
@@ -86,10 +86,13 @@ publishing {
     }
 }
 
+if( !hasProperty( 'bintray_user' ) ) ext.bintray_user = ''
+if( !hasProperty( 'bintray_api_key' ) ) ext.bintray_api_key = ''
+if( !hasProperty( 'key_phrase' ) ) ext.key_phrase = ''
 
 bintray {
-    user = !hasProperty('bintray_user') ? bintray_user : ''
-    key = !hasProperty('bintray_api_key') ? bintray_api_key : ''
+    user = bintray_user
+    key = bintray_api_key
     publications = ['mavenJava'] // When uploading Maven-based publication files
 
     dryRun = false //Whether to run this as dry-run, without deploying
@@ -104,6 +107,14 @@ bintray {
         licenses = ['Apache 2.0']
         labels = ['java', 'groovy', 'query']
         publicDownloadNumbers = true
+        version {
+            name = project.version
+            //Optional configuration for GPG signing
+            gpg {
+                sign = true //Determines whether to GPG sign the files. The default is false
+                passphrase = key_phrase //Optional. The passphrase for GPG signing'
+            }
+        }
     }
 }
 
