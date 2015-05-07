@@ -1,3 +1,4 @@
+[![Download](https://api.bintray.com/packages/pintowar/maven/groovy-sqlite/images/download.svg) ](https://bintray.com/pintowar/maven/groovy-sqlite/_latestVersion)
 [![Build Status](https://travis-ci.org/pintowar/groovy-sqlite.svg?branch=master)](https://travis-ci.org/pintowar/groovy-sqlite)
 [![Coverage Status](https://coveralls.io/repos/pintowar/groovy-sqlite/badge.svg?branch=master)](https://coveralls.io/r/pintowar/groovy-sqlite?branch=master)
 
@@ -21,7 +22,7 @@ This library assumes you know exactly what
 ``` groovy
 @GrabResolver(name='bintray-pintowar-maven', root='http://dl.bintray.com/pintowar/maven')
 @Grab(group="com.h2database", module='h2', version='1.4.182')
-@Grab(group='com.github.groovy-sqlite', module='groovy-sqlite', version='0.1.3')
+@Grab(group='com.github.groovy-sqlite', module='groovy-sqlite', version='0.1.5')
 @GrabConfig(systemClassLoader=true)
 import sqlite.sql.*
 import groovy.sql.Sql

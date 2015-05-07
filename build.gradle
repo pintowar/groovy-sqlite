@@ -23,6 +23,12 @@ repositories {
     mavenCentral()
 }
 
+ext{
+    if( !hasProperty( 'bintray_user' ) ) bintray_user = ''
+    if( !hasProperty( 'bintray_api_key' ) ) bintray_api_key = ''
+    if( !hasProperty( 'key_phrase' ) ) key_phrase = ''
+}
+
 dependencies {
     compile "org.codehaus.groovy:groovy:2.4.3"
     testCompile "org.spockframework:spock-core:1.0-groovy-2.4"
@@ -85,10 +91,6 @@ publishing {
         }
     }
 }
-
-if( !hasProperty( 'bintray_user' ) ) ext.bintray_user = ''
-if( !hasProperty( 'bintray_api_key' ) ) ext.bintray_api_key = ''
-if( !hasProperty( 'key_phrase' ) ) ext.key_phrase = ''
 
 bintray {
     user = bintray_user
