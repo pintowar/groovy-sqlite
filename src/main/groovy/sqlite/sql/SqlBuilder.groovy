@@ -1,16 +1,18 @@
 package sqlite.sql
 
 import groovy.transform.PackageScope
-import static groovy.transform.PackageScopeTarget.*
 import groovy.transform.TypeChecked
 import groovy.transform.builder.Builder
+
+import static groovy.transform.PackageScopeTarget.FIELDS
+import static groovy.transform.PackageScopeTarget.METHODS
 
 /**
  * Created by thiago on 30/04/15.
  */
-@Builder(builderClassName = "SqlBuilderCriteria", builderMethodName = "criteria", buildMethodName = "create")
-@PackageScope([FIELDS, METHODS])
 @TypeChecked
+@PackageScope([FIELDS, METHODS])
+@Builder(builderClassName = "SqlBuilderCriteria", builderMethodName = "criteria", buildMethodName = "create")
 class SqlBuilder {
     private static final String BETWEEN = '^\\$between\\.'
     private static final String NOT_BETWEEN = '^\\$not\\.between\\.'
@@ -30,6 +32,7 @@ class SqlBuilder {
     String table
     List<String> columns
     List<String> groupColumns
+    List<String> allowedParams
     Map<String, String> params
     Map<String, String> havingParams
 
@@ -113,12 +116,17 @@ class SqlBuilder {
         result.isEmpty() ? "" : "ORDER BY ${result.join(', ')}"
     }
 
+    Map<String, String> filterParams(Map<String, String> params, List<String> allowedParams) {
+        allowedParams.isEmpty() ? params : params.findAll { k, v -> allowedParams.any { k.endsWith(it) } }
+    }
+
     public Map<String, ?> queryAndData() {
-        Map where = mountWhere(getParams())
+        Map filtered = filterParams(getParams(), getAllowedParams())
+        Map where = mountWhere(filtered)
         Map having = mountHaving(getHavingParams())
-        String query = [mountSelect(getColumns()), mountTable(table),
+        String query = [mountSelect(getColumns()), mountTable(getTable()),
                         where['clause'], mountGroup(getGroupColumns()),
-                        having['clause'], mountOrder(getParams())].findAll().join(' ').toString()
+                        having['clause'], mountOrder(filtered)].findAll().join(' ').toString()
         [query: query, data: ((where['data'] as List<String>) + (having['data'] as List<String>))]
     }
 
@@ -130,12 +138,20 @@ class SqlBuilder {
         defaultOperator ?: "AND"
     }
 
+    public String getTable() {
+        table ?: "<table>"
+    }
+
     public List<String> getColumns() {
         columns ?: []
     }
 
     public List<String> getGroupColumns() {
         groupColumns ?: []
+    }
+
+    public List<String> getAllowedParams() {
+        allowedParams ?: []
     }
 
     public Map<String, String> getParams() {

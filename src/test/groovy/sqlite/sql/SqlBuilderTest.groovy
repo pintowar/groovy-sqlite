@@ -126,6 +126,25 @@ class SqlBuilderTest extends Specification {
         ['$between.age': '22,44']             || ['22', '44']
     }
 
+    def "FilterParams"() {
+        given:
+        def sqlBuilder = new SqlBuilder()
+
+        expect:
+        result == sqlBuilder.filterParams(params, allowed)
+
+        where:
+        params                                    | allowed         || result
+        [name: 'thiago']                          | ['name']        || [name: 'thiago']
+        [name: 'thiago', age: '22']               | ['age']         || [age: '22']
+        [name: 'thiago', age: '22']               | []              || [name: 'thiago', age: '22']
+        [name: 'thiago', '$qt.age': '22']         | ['age']         || ['$qt.age': '22'] //non valid where prefix
+        [name: 'thiago', '$gt.age': '22']         | ['name', 'age'] || [name: 'thiago', '$gt.age': '22']
+        [name: 'thiago', '$not.in.age': '22']     | ['name', 'age'] || [name: 'thiago', '$not.in.age': '22']
+        [name: 'thiago', '$between.age': '22,44'] | ['name', 'age'] || [name: 'thiago', '$between.age': '22,44']
+
+    }
+
     def "Query"() {
         given:
         def sqlBuilder = new SqlBuilder()
