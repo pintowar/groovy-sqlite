@@ -20,7 +20,6 @@ This library assumes you know exactly what
 ### Example
 
 ``` groovy
-@GrabResolver(name='bintray-pintowar-maven', root='http://dl.bintray.com/pintowar/maven')
 @Grab(group="com.h2database", module='h2', version='1.4.182')
 @Grab(group='com.github.groovy-sqlite', module='groovy-sqlite', version='0.1.5')
 @GrabConfig(systemClassLoader=true)
