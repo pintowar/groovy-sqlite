@@ -14,8 +14,8 @@ import static groovy.transform.PackageScopeTarget.METHODS
 @Builder(builderClassName = "SqlBuilderCriteria", builderMethodName = "criteria", buildMethodName = "create")
 @PackageScope([FIELDS, METHODS])
 class SqlBuilder {
-    private static final String BETWEEN = '^\\$between\\.'
-    private static final String NOT_BETWEEN = '^\\$not\\.between\\.'
+    private static final String BETWEEN = '^\\$(between|btw)\\.'
+    private static final String NOT_BETWEEN = '^\\$not\\.(between|btw)\\.'
     private static final String LOWER_THAN = '^\\$lt\\.'
     private static final String GREATER_THAN = '^\\$gt\\.'
     private static final String LOWER_THAN_EQUAL = '^\\$lte\\.'
@@ -24,8 +24,9 @@ class SqlBuilder {
     private static final String NOT_IN = '^\\$not\\.in\\.'
     private static final String EQ = '^\\$eq\\.'
     private static final String NOT_EQ = '^\\$not\\.eq\\.'
+    private static final String STARTS = '^\\$starts\\.'
 
-    private static final String ORDER = '^\\$order\\.'
+    private static final String ORDER = '^\\$(sort|order)\\.'
 
     String valueSep
     String defaultOperator
@@ -49,6 +50,7 @@ class SqlBuilder {
             case ~(NOT_IN + '.+'): return "${keyParam.replaceAll(NOT_IN, '')} NOT IN (${(['?'] * totalParams).join(', ')})"
             case ~(EQ + '.+'): return "${keyParam.replaceAll(EQ, '')} IS ?"
             case ~(NOT_EQ + '.+'): return "${keyParam.replaceAll(NOT_EQ, '')} IS NOT ?"
+            case ~(STARTS + '.+'): return "${keyParam.replaceAll(STARTS, '')} LIKE ?"
             case ~('^\\$.*'): return ""
 
             default: return "$keyParam = ?"
@@ -75,6 +77,7 @@ class SqlBuilder {
             else throw new IllegalArgumentException(btwMsg)
             case ~(IN + '.+'): return args
             case ~(NOT_IN + '.+'): return args
+            case ~(STARTS + '.+'): return [valueParam.replaceAll("%","")+"%"]
             case ~('^\\$.*'): return [valueParam]
 
             default: return [valueParam]

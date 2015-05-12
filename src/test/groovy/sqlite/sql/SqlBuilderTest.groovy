@@ -18,11 +18,14 @@ class SqlBuilderTest extends Specification {
         keyParam           || valParam  || clause
         'name'             || "asd"     || "name = ?"
         '$between.age'     || "asd"     || "age BETWEEN ? AND ?"
+        '$btw.age'         || "asd"     || "age BETWEEN ? AND ?"
         '$not.between.age' || "fsd"     || "age NOT BETWEEN ? AND ?"
+        '$not.btw.age'     || "fsd"     || "age NOT BETWEEN ? AND ?"
         '$in.age'          || "sdf"     || "age IN (?)"
         '$not.in.age'      || "sdf,qwe" || "age NOT IN (?, ?)"
         '$lt.age'          || "hfd"     || "age < ?"
         '$gt.age'          || "asd"     || "age > ?"
+        '$starts.age'      || "asd"     || "age LIKE ?"
         '$order.age'       || "gfd"     || ""
     }
 
@@ -43,6 +46,7 @@ class SqlBuilderTest extends Specification {
         '$not.in.age'      || "sdf,qwe" || ["sdf", "qwe"]
         '$lt.age'          || "hfd"     || ["hfd"]
         '$gt.age'          || "asd"     || ["asd"]
+        '$starts.age'      || "asd"     || ["asd%"]
         '$order.age'       || "gfd,qwe" || ["gfd,qwe"]
     }
 

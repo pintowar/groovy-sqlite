@@ -35,6 +35,7 @@ class SqlBuilderExecTest extends Specification {
         ['name']     | 'my_tab'                                      | ['$gt.age': '20', '$order.age': 'desc']  || 2
         []           | 'my_tab'                                      | ['$in.age': '29,44']                     || 2
         ['1 as zaz'] | 'my_tab a inner join my_tab b on a.id = b.id' | ['$lte.a.birth': '2015-05-01']           || 3
+        []           | 'my_tab'                                      | ['$starts.name': 'b']                    || 1
     }
 
 }
