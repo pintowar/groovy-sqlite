@@ -24,6 +24,8 @@ class SqlBuilder {
     private static final String NOT_IN = '^\\$not\\.in\\.'
     private static final String EQ = '^\\$eq\\.'
     private static final String NOT_EQ = '^\\$not\\.eq\\.'
+    private static final String IS = '^\\$is\\.'
+    private static final String NOT_IS = '^\\$not\\.is\\.'
     private static final String STARTS = '^\\$starts\\.'
 
     private static final String ORDER = '^\\$(sort|order)\\.'
@@ -48,8 +50,10 @@ class SqlBuilder {
             case ~(GREATER_THAN_EQUAL + '.+'): return "${keyParam.replaceAll(GREATER_THAN_EQUAL, '')} >= ?"
             case ~(IN + '.+'): return "${keyParam.replaceAll(IN, '')} IN (${(['?'] * totalParams).join(', ')})"
             case ~(NOT_IN + '.+'): return "${keyParam.replaceAll(NOT_IN, '')} NOT IN (${(['?'] * totalParams).join(', ')})"
-            case ~(EQ + '.+'): return "${keyParam.replaceAll(EQ, '')} IS ?"
-            case ~(NOT_EQ + '.+'): return "${keyParam.replaceAll(NOT_EQ, '')} IS NOT ?"
+            case ~(EQ + '.+'): return "${keyParam.replaceAll(EQ, '')} = ?"
+            case ~(NOT_EQ + '.+'): return "${keyParam.replaceAll(NOT_EQ, '')} <> ?"
+            case ~(IS + '.+'): return "${keyParam.replaceAll(IS, '')} IS ?"
+            case ~(NOT_IS + '.+'): return "${keyParam.replaceAll(NOT_IS, '')} IS NOT ?"
             case ~(STARTS + '.+'): return "${keyParam.replaceAll(STARTS, '')} LIKE ?"
             case ~('^\\$.*'): return ""
 

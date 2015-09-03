@@ -27,6 +27,10 @@ class SqlBuilderTest extends Specification {
         '$gt.age'          || "asd"     || "age > ?"
         '$starts.age'      || "asd"     || "age LIKE ?"
         '$order.age'       || "gfd"     || ""
+        '$eq.age'          || "asd"     || "age = ?"
+        '$is.age'          || "asd"     || "age IS ?"
+        '$not.eq.age'      || "asd"     || "age <> ?"
+        '$not.is.age'      || "asd"     || "age IS NOT ?"
     }
 
     def "WhereData"() {
